@@ -1,0 +1,24 @@
+server:
+  port: 8102
+
+local:
+  filetransfer:
+    lbServerIp: 127.0.0.1:8102
+    tempFilePath: C:\nas\temp
+    nasStoragePath: C:\nas\upload
+
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/views
+      suffix: .jsp
+    static-path-pattern: /static/**
+  resources:
+    static-locations: classpath:/static/
+
+juhe:
+  realTimeUrl: http://web.juhe.cn:8080/finance/stock/hs?gid=sh601009&key=d61b577ac3737b7faeabbd4766a2b53d
+  key: d61b577ac3737b7faeabbd4766a2b53d
+
+
+
