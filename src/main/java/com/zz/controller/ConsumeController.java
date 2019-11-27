@@ -33,19 +33,19 @@ public class ConsumeController {
     public String stockSearch(Model model,TimeInVo timeInVo){
         log.info("开始时间为："+timeInVo.getBeginDate());
         log.info("结束时间为："+timeInVo.getEndDate());
-        List<String> codeList = stockService.getAllCode();
+        List<StockData> codeList = stockService.getAllCode();
         List<StockData> list = new ArrayList<StockData>();
-        codeList.forEach(code->{
-            StockData stockData = new StockData();
-            stockData.setSymbol(code);
-            double nowPrice = 10;
-            stockData.setNowPrice(nowPrice);
-            double  beforePrice = 20;
-            stockData.setBeforePrice(beforePrice);
-            double percent = (nowPrice-beforePrice)/beforePrice ;
-            stockData.setPercent(percent);
-            list.add(stockData);
-        });
+//        codeList.forEach(stockData->{
+//            StockData stockData = new StockData();
+//            stockData.setSymbol(code);
+//            double nowPrice = 10;
+//            stockData.setNowPrice(nowPrice);
+//            double  beforePrice = 20;
+//            stockData.setBeforePrice(beforePrice);
+//            double percent = (nowPrice-beforePrice)/beforePrice ;
+//            stockData.setPercent(percent);
+//            list.add(stockData);
+//        });
         model.addAttribute("list", list);
         return "/stockSearch";
     }

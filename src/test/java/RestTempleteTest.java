@@ -28,19 +28,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import java.math.BigDecimal;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.*;
 
-import static com.zz.common.DateUtils.getDateStr;
-import static org.json.zip.JSONzip.end;
-import static redis.clients.jedis.Protocol.Keyword.BY;
 
 /**
  * Created by zhangzheng on 2019/10/25.
@@ -140,6 +132,8 @@ public class RestTempleteTest {
 
 
 
+
+
     public static void main(String[] args) {
 //        StockData stockData = getStockDataBySymbolAndTime("SH600756","2018-09-29","2019-10-31");
 //        StockData stockData2 = getStockDataBySymbolAndTime("SZ002001","2018-09-29","2019-10-31");
@@ -181,7 +175,7 @@ public class RestTempleteTest {
                 stockData.setName((String) stockObject.get("name"));
                 list.add(stockData);
             }
-        }while(totalNum !=totalCount);
+        }while(totalNum <totalCount);
 
 
         return list;
