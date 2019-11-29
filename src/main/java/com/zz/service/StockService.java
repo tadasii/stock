@@ -34,7 +34,7 @@ public class StockService {
 
     public static  int type = 4; //分页方式
 
-    @Value("juhe.key")
+    @Value("${juhe.key}")
     String key;
 
     private String xueqiuCookieUrl ="https://xueqiu.com";

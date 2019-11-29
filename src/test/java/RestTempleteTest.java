@@ -83,6 +83,7 @@ public class RestTempleteTest {
      * @return
      */
    public static StockData getStockDataBySymbolAndTime(String symbol,String beginDateStr,String endDateStr){
+       System.out.println("正在查询"+symbol+"数据");
        long begin =  DateUtils.parseForNumber(beginDateStr);
        long end =  DateUtils.parseForNumber(endDateStr);
        List<String> cookieList = getCookieList();
@@ -95,37 +96,49 @@ public class RestTempleteTest {
        url=url+"?symbol=" +symbol+
                "&period=1day&type=before&begin="+begin+
                "&end="+end;
-       System.out.println("url:"+url);
+//       System.out.println("url:"+url);
        String  stockInfo = restTemplate.postForEntity(url,requestEntity,String.class).getBody();
        JSONObject stockDataJson = new JSONObject(stockInfo);
-
-       JSONArray stockList = (JSONArray) stockDataJson.get("chartlist");
+       JSONArray stockList;
        StockData stockData = new StockData();
        stockData.setSymbol(symbol);
-       if(stockList!=null&&stockList.length()>0){
-           JSONObject  stockItemFirst = (JSONObject) stockList.get(0);
-           Double beforePrice = (Double) stockItemFirst.get("close");
-           long  beforeTimestamp = (long) stockItemFirst.get("timestamp");
-           stockData.setBeforeTimeNum(beforeTimestamp);
-           Date beforeTime = new Date(beforeTimestamp);
-           String beforeTimeStr =  DateUtils.getDateStr(beforeTime,"yyyy-MM-dd");
-           stockData.setBeforePrice(beforePrice);
-           stockData.setBeforeTime(beforeTimeStr);
+       try {
+           stockList = (JSONArray) stockDataJson.get("chartlist");
 
-           JSONObject  stockItemLast = (JSONObject) stockList.get(stockList.length()-1);
-           Double endPrice = (Double) stockItemLast.get("close");
-           long  endTimestamp = (long) stockItemLast.get("timestamp");
-           stockData.setNowTimeNum(endTimestamp);
-           Date  endTime = new Date(endTimestamp);
-           String endTimeStr =  DateUtils.getDateStr(endTime,"yyyy-MM-dd");
-           stockData.setNowPrice(endPrice);
-           stockData.setNowTime(endTimeStr);
+           if(stockList!=null&&stockList.length()>0){
+               JSONObject  stockItemFirst = (JSONObject) stockList.get(0);
+               Double beforePrice = (Double) stockItemFirst.get("close");
+               long  beforeTimestamp = (long) stockItemFirst.get("timestamp");
+               stockData.setBeforeTimeNum(beforeTimestamp);
+               Date beforeTime = new Date(beforeTimestamp);
+               String beforeTimeStr =  DateUtils.getDateStr(beforeTime,"yyyy-MM-dd");
+               stockData.setBeforePrice(beforePrice);
+               stockData.setBeforeTime(beforeTimeStr);
 
-           stockData.setDayNum(stockList.length());
+               JSONObject  stockItemLast = (JSONObject) stockList.get(stockList.length()-1);
+               Double endPrice = (Double) stockItemLast.get("close");
+               long  endTimestamp = (long) stockItemLast.get("timestamp");
+               stockData.setNowTimeNum(endTimestamp);
+               Date  endTime = new Date(endTimestamp);
+               String endTimeStr =  DateUtils.getDateStr(endTime,"yyyy-MM-dd");
+               stockData.setNowPrice(endPrice);
+               stockData.setNowTime(endTimeStr);
 
-           double percent = (stockData.getNowPrice()-stockData.getBeforePrice())/stockData.getBeforePrice() ;
-           stockData.setPercent(percent);
+               stockData.setDayNum(stockList.length());
+
+               double percent = (stockData.getNowPrice()-stockData.getBeforePrice())/stockData.getBeforePrice() ;
+               stockData.setPercent(percent);
+           }
+       }catch (Exception e){
+           //异常数据
+           stockData.setBeforePrice(0);
+           stockData.setBeforeTime(beginDateStr);
+           stockData.setNowPrice(0);
+           stockData.setNowTime(endDateStr);
+           stockData.setDayNum(0);
+           stockData.setPercent(0);
        }
+
 
         return  stockData;
    }
@@ -135,14 +148,14 @@ public class RestTempleteTest {
 
 
     public static void main(String[] args) {
-//        StockData stockData = getStockDataBySymbolAndTime("SH600756","2018-09-29","2019-10-31");
+        StockData stockData = getStockDataBySymbolAndTime("SH688001","2019-08-30","2019-11-28");
 //        StockData stockData2 = getStockDataBySymbolAndTime("SZ002001","2018-09-29","2019-10-31");
-//        System.out.println(stockData);
+        System.out.println(stockData);
 //        System.out.println(stockData2);
-        List<StockData> list =  getAllShCodeFromNet();
-        for (int i = 0; i < list.size(); i++) {
-            System.out.println(list.get(i));
-        }
+//        List<StockData> list =  getAllShCodeFromNet();
+//        for (int i = 0; i < list.size(); i++) {
+//            System.out.println(list.get(i));
+//        }
     }
 
     public static  String  shAllUrl = "http://web.juhe.cn:8080/finance/stock/shall" ;

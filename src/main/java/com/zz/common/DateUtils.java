@@ -18,7 +18,7 @@ public class DateUtils {
 
     private static final String DATEFULLSTR="yyyy-MM-dd HH:mm:ss";
 
-    private static final String DATE8STR="yyyyMMdd";
+    private static final String DATE8STR="yyyy-MM-dd";
 
     private static final String TIME6STR="HHmmss";
     public static final SimpleDateFormat getDate8Format(){
@@ -248,6 +248,19 @@ public class DateUtils {
         return calendar.getTime();
     }
 
+    /**
+     * 增加月份
+     * @param date 时间
+     * @param i 月份数
+     * @return 减少月份的时间
+     */
+    public static Date subMonth(Date date,int i){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH,-i);
+        return calendar.getTime();
+    }
+
     public static int getTwoDateDay(Date beginDate,Date endDate){
        long res= (endDate.getTime()-beginDate.getTime())/(60*60*24*1000);
         return (int) res +1;
@@ -271,12 +284,17 @@ public class DateUtils {
         return false;
     }
 
-//    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) throws ParseException {
 //        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 //        Date beginDate = sdf.parse("2019-05-01");
 //        Date endDate = sdf.parse("2019-05-01");
 //        System.out.println(getTwoDateDay(beginDate,endDate));
-//    }
+
+        System.out.println(getCurrentDate8Str());
+
+        Date date = subMonth(new Date(),12);
+        System.out.println(getDateStr(date,DATE8STR));
+    }
 
     public static Date parseForDate(String source){
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");

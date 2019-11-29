@@ -32,11 +32,11 @@
 
 			<label>查询时间：</label>
 			<input id="beginDate"  name="beginDate"  type="text"  maxlength="20" class="input-medium Wdate" style="width:163px;"
-				value="${timeInVo.beginDate}"
+				value="${time.beginDate}"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
 				　--　
 			<input id="endDate" name="endDate" type="text" maxlength="20" class="input-medium Wdate" style="width:163px;"
-				value="${timeInVo.endDate}"
+				value="${time.endDate}"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
 			&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 		</div>
@@ -45,9 +45,12 @@
 		<thead>
 			<tr>
 				<th>股票编号</th>
-				<th>股票当前价格</th>
+				<th>股票名称</th>
 				<th>股票之前价格</th>
-				<th>股票除权价格</th>
+				<th>股票之前时间</th>
+				<th>股票当前价格</th>
+				<th>股票当前时间</th>
+				<th>统计天数</th>
 				<th>涨幅</th>
 			</tr>
 		</thead>
@@ -58,13 +61,22 @@
 						${item.code}
 					</td>
 					<td>
-							${item.nowPrice}
+							${item.name}
 					</td>
 					<td>
 							${item.beforePrice}
 					</td>
 					<td>
-							${item.realBPrice}
+							${item.beforeTime}
+					</td>
+					<td>
+							${item.nowPrice}
+					</td>
+					<td>
+							${item.nowTime}
+					</td>
+					<td>
+							${item.dayNum}
 					</td>
 					<td>
 							${item.percent}
