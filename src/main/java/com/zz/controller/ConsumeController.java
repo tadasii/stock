@@ -40,35 +40,27 @@ public class ConsumeController {
     public String stockSearch(Model model,TimeInVo timeInVo){
         log.info("开始时间为："+timeInVo.getBeginDate());
         log.info("结束时间为："+timeInVo.getEndDate());
-        List<StockData> codeList = stockService.getAllCode();
-        List<StockData> list = new ArrayList<StockData>();
-//        codeList.forEach(stockData->{
-//            StockData stockData = new StockData();
-//            stockData.setSymbol(code);
-//            double nowPrice = 10;
-//            stockData.setNowPrice(nowPrice);
-//            double  beforePrice = 20;
-//            stockData.setBeforePrice(beforePrice);
-//            double percent = (nowPrice-beforePrice)/beforePrice ;
-//            stockData.setPercent(percent);
-//            list.add(stockData);
-//        });
+        List<StockData> list = getStockList(timeInVo);
+        model.addAttribute("time", timeInVo);
         model.addAttribute("list", list);
         return "/stockSearch";
     }
     @RequestMapping("/stockRank")
     public String stockRank(@RequestParam String type,Model model){
-        System.out.println("type====="+type);
-
         TimeInVo time = getTimeByType(type);
+        List<StockData> list = getStockList( time);
+        model.addAttribute("time", time);
+        model.addAttribute("list", list);
+        return "/stockSearch";
+    }
 
+
+    private   List<StockData> getStockList(TimeInVo time){
         List<StockData> codeList = stockService.getAllCode();
         List<StockData> list = new ArrayList<>();
-//        codeList = codeList.subList(0,100);
-        //todo codeList拆分成多个list ,利用多线程得到个股数据，然后再合并
+
         final List<StockData> finalList = list;
         long start = System.currentTimeMillis();
-
         codeList.parallelStream().forEach(
                 stockData->{
                     StockData result = stockInfoUtils.getStockDataBySymbolAndTime(stockData.getSymbol(),time.getBeginDate(),time.getEndDate());
@@ -77,25 +69,16 @@ public class ConsumeController {
                     finalList.add(result);
                 }
         );
-        System.out.println(codeList.size()+"个股数据查询共耗时"+(System.currentTimeMillis() - start) + "毫秒。");
-//        for (StockData stockData : codeList) {
-//            //根据股票编码和时间获得股票上涨信息
-//            StockData result = stockInfoUtils.getStockDataBySymbolAndTime(stockData.getSymbol(),time.getBeginDate(),time.getEndDate());
-//            result.setName(stockData.getName());
-//            result.setCode(stockData.getCode());
-//            list.add(result);
-//        }
+        log.info(codeList.size()+"个股数据查询共耗时"+(System.currentTimeMillis() - start) + "毫秒。");
         long start2 = System.currentTimeMillis();
         //按上涨幅度排名
         list = finalList.stream().sorted((stockData1,stockData2)->{
-           BigDecimal bd1= new BigDecimal(stockData1.getPercent());
-           BigDecimal bd2= new BigDecimal(stockData2.getPercent());
+            BigDecimal bd1= new BigDecimal(stockData1.getPercent());
+            BigDecimal bd2= new BigDecimal(stockData2.getPercent());
             return bd1.compareTo(bd2);
         }).collect(Collectors.toList());
-        System.out.println(finalList.size()+"个股数据排序共耗时"+(System.currentTimeMillis() - start2) + "毫秒。");
-        model.addAttribute("time", time);
-        model.addAttribute("list", list);
-        return "/stockSearch";
+       log.info(finalList.size()+"个股数据排序共耗时"+(System.currentTimeMillis() - start2) + "毫秒。");
+        return list;
     }
 
     /**
@@ -108,9 +91,11 @@ public class ConsumeController {
      */
     private TimeInVo getTimeByType(String type) {
         TimeInVo timeInVo = new TimeInVo();
-        timeInVo.setEndDate(DateUtils.getCurrentDate8Str());
+        Date endTime = DateUtils.getYesterday();
+        timeInVo.setEndDate(DateUtils.getDateStr(endTime,"yyyy-MM-dd"));
         Date startTime=DateUtils.subMonth(new Date(),Integer.valueOf(type));
         timeInVo.setBeginDate(DateUtils.getDateStr(startTime,"yyyy-MM-dd"));
+        log.info("查询开始时间:"+timeInVo.getBeginDate()+"结束时间："+timeInVo.getEndDate());
        return   timeInVo;
     }
 

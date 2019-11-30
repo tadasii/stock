@@ -8,4 +8,8 @@ https://blog.csdn.net/luanpeng825485697/article/details/78442062?locationNum=5&f
 https://blog.csdn.net/makesibushuohua/article/details/51519546
 
 4.雪球获取个股历史数据
+-- 作废
 https://xueqiu.com/stock/forchartk/stocklist.json?symbol=SH600756&period=1day&type=before&begin=1478620800000&end=1510126200000
+
+-- 新的接口
+https://stock.xueqiu.com/v5/stock/chart/kline.json?symbol=SH600028&begin=1417329424871&end=1575009390475&period=day&type=before&indicator=kline

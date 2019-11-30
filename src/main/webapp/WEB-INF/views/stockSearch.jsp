@@ -44,6 +44,7 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
+				<th>序号</th>
 				<th>股票编号</th>
 				<th>股票名称</th>
 				<th>股票之前价格</th>
@@ -55,8 +56,11 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach items="${list}" var="item">
+			<c:forEach items="${list}" var="item" varStatus="itemStatus">
 				<tr>
+					<td>
+						${itemStatus.index+1}
+					</td>
 					<td>
 						${item.code}
 					</td>

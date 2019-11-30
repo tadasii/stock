@@ -6,6 +6,7 @@ import java.math.BigDecimal;
  * Created by zhangzheng on 2019/10/24.
  */
 public class StockData {
+    private int num;
     private String symbol; //代码
     private String code;
     private String name;
@@ -107,6 +108,14 @@ public class StockData {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
     }
 
     @Override
